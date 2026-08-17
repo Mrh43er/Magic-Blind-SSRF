@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SSRF Exploitation Report - {{.Target}}</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #0d1117; color: #c9d1d9; padding: 20px; }
+.container { max-width: 1400px; margin: 0 auto; }
+.header { background: linear-gradient(135deg, #1f6feb, #388bfd); padding: 30px; border-radius: 10px; margin-bottom: 20px; }
+.header h1 { color: white; font-size: 28px; }
+.header .meta { color: rgba(255,255,255,0.9); margin-top: 10px; font-size: 14px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+.stat-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; text-align: center; }
+.stat-card.critical { border-color: #f85149; }
+.stat-card.high { border-color: #ff9500; }
+.stat-card.medium { border-color: #d29922; }
+.stat-card .number { font-size: 36px; font-weight: bold; }
+.stat-card.critical .number { color: #f85149; }
+.stat-card.high .number { color: #ff9500; }
+.stat-card.medium .number { color: #d29922; }
+.stat-card .label { color: #8b949e; font-size: 12px; text-transform: uppercase; margin-top: 5px; }
+.findings { background: #161b22; border: 1px solid #30363d; border-radius: 8px; overflow: hidden; }
+.finding { border-bottom: 1px solid #21262d; padding: 20px; }
+.finding:hover { background: #1c2128; }
+.finding-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px; }
+.finding-title { display: flex; gap: 10px; align-items: center; }
+.badge { padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+.badge.critical { background: #f85149; color: white; }
+.badge.high { background: #ff9500; color: white; }
+.badge.medium { background: #d29922; color: white; }
+.badge.low { background: #6e7681; color: white; }
+.badge.info { background: #58a6ff; color: white; }
+.finding-type { color: #58a6ff; font-family: 'Courier New', monospace; font-size: 13px; }
+.payload { background: #0d1117; border: 1px solid #30363d; padding: 10px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 12px; color: #79c0ff; overflow-x: auto; margin: 10px 0; word-break: break-all; }
+.evidence { background: #0d1117; border-left: 3px solid #f85149; padding: 10px; font-family: 'Courier New', monospace; font-size: 12px; color: #8b949e; margin: 10px 0; max-height: 200px; overflow-y: auto; }
+.meta-row { display: flex; gap: 20px; flex-wrap: wrap; font-size: 12px; color: #8b949e; }
+.meta-item { display: flex; gap: 5px; }
+.meta-label { color: #6e7681; }
+.target { background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-family: 'Courier New', monospace; }
+.target-label { color: #8b949e; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; }
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>🎯 SSRF Exploitation Report</h1>
+<div class="meta">Generated: {{.Timestamp}}</div>
+</div>
+
+<div class="target">
+<div class="target-label">Target</div>
+{{.Target}}
+</div>
+
+<div class="stats">
+<div class="stat-card">
+<div class="number">{{.Total}}</div>
+<div class="label">Total Findings</div>
+</div>
+<div class="stat-card critical">
+<div class="number">{{.Critical}}</div>
+<div class="label">Critical</div>
+</div>
+<div class="stat-card high">
+<div class="number">{{
+
+
+.High}}</div>
+<div class="label">High</div>
+</div>
+<div class="stat-card medium">
+<div class="number">{{.Medium}}</div>
+<div class="label">Medium</div>
+</div>
+<div class="stat-card">
+<div class="number">{{.OpenPorts}}</div>
+<div class="label">Open Ports</div>
+</div>
+</div>
+
+<div class="findings">
+{{range .Findings}}
+<div class="finding">
+<div class="finding-header">
+<div class="finding-title">
+<span class="badge {{.Severity}}">{{.Severity}}</span>
+<span class="finding-type">{{.Type}}</span>
+</div>
+<span style="color: #8b949e; font-size: 12px;">{{.Timestamp.Format "15:04:05"}}</span>
+</div>
+<div class="meta-row">
+{{if .Host}}<div class="meta-item"><span class="meta-label">Host:</span> {{.Host}}</div>{{end}}
+{{if .Port}}<div class="meta-item"><span class="meta-label">Port:</span> {{.Port}}</div>{{end}}
+{{if .Scheme}}<div class="meta-item"><span class="meta-label">Scheme:</span> {{.Scheme}}</div>{{end}}
+<div class="meta-item"><span class="meta-label">Status:</span> {{.StatusCode}}</div>
+<div class="meta-item"><span class="meta-label">Size:</span> {{.ResponseLen}} bytes</div>
+</div>
+<div class="payload">{{.Payload}}</div>
+{{if .Note}}<div style="color: #d29922; margin: 10px 0;">📝 {{.Note}}</div>{{end}}
+{{if .Evidence}}<div class="evidence">{{.Evidence}}</div>{{end}}
+</div>
+{{end}}
+</div>
+
+</div>
+</body>
+</html>
